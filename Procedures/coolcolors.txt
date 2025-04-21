@@ -1,0 +1,37 @@
+void Colors()
+{
+		int background, text;
+		char command[20];
+	    system("cls");
+	    printf("Choose a background color:\n");
+	    printf(" 0) Black\n");
+	    printf(" 1) Blue\n");
+	    printf(" 2) Green\n");
+	    printf(" 3) Aqua\n");
+	    printf(" 4) Red\n");
+	    printf(" 5) Purple\n");
+	    printf(" 6) Yellow\n");
+	    printf(" 7) White\n");
+	    printf("Enter your choice: ");
+	    scanf("%d", &background);
+	
+	    system("cls");
+	    printf("Choose a text color:\n");
+	    printf(" 0) Black\n");
+	    printf(" 1) Blue\n");
+	    printf(" 2) Green\n");
+	    printf(" 3) Aqua\n");
+	    printf(" 4) Red\n");
+	    printf(" 5) Purple\n");
+	    printf(" 6) Yellow\n");
+	    printf(" 7) White\n");
+	    printf("Enter your choice: ");
+	    scanf("%d", &text);
+	
+	    // Convert color codes to console color format
+	    int color = (background * 16) + text;
+	
+	    // Set console color
+	    sprintf(command, "color %x", color);
+		system(command);
+}

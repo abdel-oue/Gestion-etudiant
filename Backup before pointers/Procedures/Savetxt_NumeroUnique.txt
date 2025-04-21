@@ -1,0 +1,99 @@
+void Savetxt2(Student *t, int Nbr, char Nom[30],int NbrSemestres) 
+{
+	//nous avons modifié la procédure pour permettre à l'utilisateur de choisir s'il souhaite créer le fichier. 
+	//si nous utilisions le mode "a" seulement, cela créerait un fichier même si l'utilisateur ne le souhaite pas.
+    int j,i,k,l,vam=1,S,cp=0;
+    int NbrM;
+    int I=0,vide=1;
+    int *TEMP = (int*)malloc(sizeof(int));
+    long fpos;
+    FILE *f = fopen(Nom, "r");
+    if (f == NULL)
+	{
+        system("cls");
+        printf("Fichier introuvable.\nVoulez-vous cr%cer un nouveau fichier nomme '%s'?\n 1-Oui | 2-Non \n",130, Nom);
+        scanf("%d", &vam);
+    }
+    else if (f != NULL && FichierVide(Nom) == 0) // fichier n'est pas vide
+    {
+    	while(!feof(f))
+		{
+			fscanf(f,"%*s %d %*d %*d %*d %*d",&TEMP[I]);// scan les id uniques dans TEMP
+			I++;
+			realloc(TEMP,sizeof(int)*(I+1));
+		}
+	}
+    fclose(f);
+    if(vam == 1)
+    {
+    	f = fopen(Nom, "a");
+	}
+    if (f != NULL) 
+	{
+		vide = FichierVide(Nom);
+		for (i=0;i<Nbr;i++) 
+			{
+				// fichier vide == 1 
+			    S = 0;
+			    if(vide == 0) 
+			    {
+				    for (j=0;j<=I;j++) 
+						{
+					    	if (TEMP[j] == t[i].NU)
+								{
+						            S = 1;
+						            break;
+						        }
+					    }
+				}
+				// nsa fichier vide wnsa TEMP
+			    if (S == 0)
+					{
+				    	if(i == 0 && vide == 0) // le fichier n'est pas deja vide 
+				        {
+				            fprintf(f,"\n");
+						}
+						if(i == 0 && vide == 1) // fichier vide alors -->
+						{
+							fprintf(f,"%d ",NbrSemestres);
+							for(k=0;k<NbrSemestres;k++)
+					        {
+					        	fseek(f,fpos,SEEK_SET);
+					        	fprintf(f,"%d ",t[i].S[k].NombreModules);
+							}
+							fprintf(f,"\n");
+						}
+				        fprintf(f, "%s %d %d %d %d %d %d ", t[i].Nom, t[i].NU, t[i].Age, t[i].Date.Day, t[i].Date.Month, t[i].Date.Year);
+				        
+				        for(k=0;k<NbrSemestres;k++)
+				        {
+				        	NbrM = t[0].S[k].NombreModules;
+				        	for(l=0;l<NbrM;l++)
+				        	{
+				        		fseek(f,fpos,SEEK_SET);
+				        		fprintf(f,"%s %.2f %d ",t[i].S[k].M[l].NomModule,t[i].S[k].M[l].Note,t[i].S[k].M[l].Check);
+							}
+						}
+				        if (i != Nbr -1) 
+						{
+				            fprintf(f,"\n");
+				        }
+				    } 
+					else 
+					{
+				        cp++;
+				    }
+	        }
+	        free(TEMP);
+	    if (cp != 0) 
+		{
+            printf("L'inscription a %cchou\x82 pour %d \x82tudiants (Raison : m\x88mes identifiants uniques). \n", 130, cp);
+        }
+        printf("Done ! \n");
+    } 
+	else 
+	{
+        printf("Impossible d'ouvrir le fichier.");
+    }
+    fclose(f);
+}

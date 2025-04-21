@@ -1,0 +1,72 @@
+void Loadtxt(Student *&t, int &Nbr,char Nom[30],int &NbrSemestres,bool Premierefois)
+	{
+		FILE *f = NULL;
+		f = fopen(Nom,"r");
+		int fpos;
+		int NbrM;
+		int j;
+		int S=0,cp=0,oldNbr,i;
+		oldNbr = Nbr;
+		if(f == NULL)
+		{
+			printf("Erreur impossible d'ouvrir le fichier.\n");
+		}
+		else
+		{	
+			if(Nbr == 0)
+			{
+				t = (Student*)malloc(sizeof(Student));
+			}
+				while(!feof(f))
+				{
+					fpos = ftell(f);
+					printf("%d\n",fpos);
+					if(fpos == 0)
+					{
+						fscanf(f,"%d ",&NbrSemestres);
+						for(i=0;i<NbrSemestres;i++)
+						{
+							fscanf(f,"%d ",&t[0].S[i].NombreModules);
+						}
+					}
+					fpos = ftell(f);
+					printf("%d\n",fpos);
+						fscanf(f, "%s %d %d %d %d %d ", t[Nbr].Nom, &t[Nbr].NU, &t[Nbr].Age, &t[Nbr].Date.Day, &t[Nbr].Date.Month, &t[Nbr].Date.Year);
+					for(i=0;i<NbrSemestres;i++)
+				        {
+				        	NbrM = t[0].S[i].NombreModules;
+				        	for(j=0;j<NbrM;j++)
+				        	{
+				        		//fseek(f,fpos,SEEK_SET);
+				        		fscanf(f,"%s %f %d ",t[Nbr].S[i].M[j].NomModule,&t[Nbr].S[i].M[j].Note,&t[Nbr].S[i].M[j].Check);
+							}
+						}
+						
+					S = 0;
+					for(i=0;i<oldNbr;i++) // pour que les étudiants avec le même numéro unique ne soient pas chargés 
+					{
+						if(t[Nbr].NU == t[i].NU)
+						{
+							S = 1;
+						}
+					}
+					if(S == 1)
+					{
+						cp++;
+					}
+					else
+					{
+						Nbr++;
+						t = (Student*)realloc(t, sizeof(Student)*(Nbr+1));
+						Premierefois = false;
+						// realloc(t, sizeof(Student) * (Nbr + 1)) ??? 
+					}
+				}
+			if(cp != 0)
+			{
+				printf("L'inscription a %cchou\x82 pour %d \x82tudiants (Raison : m\x88mes identifiants uniques).\n",130, cp); // cp-1 car ligne compte aussi la dernière ligne du programme '\n'
+			}
+			printf("Done ! ");
+		}
+		fclose(f);
+	}
